@@ -8,17 +8,21 @@ from matplotlib import rc
 from matplotlib import font_manager as fm, rcParams
 
 alg = 'FedLaAvg'
-def plot(run_list, output_fp,
+def plot(run_list, output_fp, x_column=1, y_column=2,
+    fig_size=(10, 6),
     x_label=None, y_label=None,
     legend_list=None, color_list=None, line_list=None, plot_every_list=None, alpha_list=None, line_width_list=None,
     max_it=None, font=15,
     subfigure_pars=None,
     plot_order=None, legend_order=None, 
     legend_loc=None, fraemon=True, label_spacing=0.4,
-    x_ticks=None, x_annotation=None):
+    x_ticks=None, x_annotation=None, y_ticks=None,
+    y_scaling=1):
     """
-    :run_list: list of csv file names (discarding '.csv')
+    :run_list: list of csv file names (discarding '.csv'), or list of data (x, y)
     :output_fp: the output file name
+    :x_column: data column for x
+    :y_column: data column for y
 
     :x_label, y_label: labels
 
@@ -40,12 +44,15 @@ def plot(run_list, output_fp,
     :plot_order: define the order to plot lines 
     :legend_order: define the order to put legends, by defaut same with plot_order
 
-    :legend_loc: location to put the legends
+    :legend_loc: location to put the legends loc / (loc, bbox_to_anchor)
+        for example ("upper right", (0.5, 0.5)) put the upper right corner on (x=0.5, y=0.5)
     :fraemon: whether to add fraemon to legends
     :label_spacing: label_spacing for legends
 
     :x_ticks: tuple of steps and text
     :x_annotation: annotation at the end of x_ticks, e.g. 10^3
+
+    :y_scaling: scaling y axis ticks (y_ticks has higher priority)
     """
 
     # rc('text', usetex=True)
@@ -56,6 +63,12 @@ def plot(run_list, output_fp,
     mpl.rcParams['font.family'] = 'STIXGeneral'
     
     num_lines = len(run_list)
+
+    legend_loc_dict = {}
+    if isinstance(legend_loc, tuple):
+        legend_loc, legend_bbox = legend_loc
+        legend_loc_dict['bbox_to_anchor'] = legend_bbox
+    legend_loc_dict['loc'] = legend_loc
 
     if plot_every_list is None:
         plot_every_list = [1] * num_lines
@@ -74,26 +87,28 @@ def plot(run_list, output_fp,
         plot_order = list(range(num_lines))
     if legend_order is None:
         legend_order = deepcopy(plot_order)
-
-    filep_list = [osp.join('data', run + '.csv') for run in run_list]
-
+    
     if x_ticks is None:
         x_ticks = ()
+    if y_ticks is None:
+        y_ticks = ()
 
     lines = [None] * len(legend_list)
 
     steps_list = []
     values_list = []
 
+    filep_list = [osp.join('data', run_name + '.csv') for run_name in run_list]
+
     for filep, plot_every in zip(filep_list, plot_every_list):
         with open(filep) as f:  
             reader = csv.reader(f)
             next(reader)
-            steps = [int(row[1]) for row in reader]
+            steps = [int(row[x_column]) for row in reader]
         with open(filep) as f:
             reader = csv.reader(f)
             next(reader)
-            values = [float(row[2]) * 100 for row in reader]
+            values = [float(row[y_column]) * y_scaling for row in reader]
         low = 0
         proc_steps = []
         proc_values = []
@@ -107,7 +122,7 @@ def plot(run_list, output_fp,
         steps_list.append(proc_steps)
         values_list.append(proc_values)
 
-    fig = plt.figure(dpi=128, figsize=(10, 6))
+    fig = plt.figure(dpi=128, figsize=fig_size)
 
     plot_pars_array = list(zip(steps_list, values_list, color_list, line_list, alpha_list, legend_list, line_width_list))
     for line_idx in plot_order:
@@ -130,7 +145,7 @@ def plot(run_list, output_fp,
 
 
     plt.xticks(*x_ticks, fontsize=font)
-    plt.yticks(fontsize=font)
+    plt.yticks(*y_ticks, fontsize=font)
 
     handles = [None] * len(legend_order)
     for handles_idx, legend_idx in enumerate(legend_order):
@@ -139,7 +154,8 @@ def plot(run_list, output_fp,
             print(f"legend_order {legend_order} contradicts plot_order {plot_order}, since require legends on lines that are not plotted.")
             raise AssertionError()
         handles[handles_idx] = handle
-    fig.legend(fancybox=True, handles=handles, prop=font_dict, frameon=fraemon, labelspacing=label_spacing, loc=legend_loc)
+    fig.legend(fancybox=True, handles=handles, prop=font_dict, frameon=fraemon, labelspacing=label_spacing, 
+        **legend_loc_dict)
 
     if x_annotation is not None:
         plt.annotate(x_annotation, xy=(1,0), ha='left', va='top', xycoords='axes fraction', textcoords='offset points', fontsize=font)
@@ -171,5 +187,5 @@ def plot(run_list, output_fp,
             plt.annotate(subfigure_x_annotation, xy=(1,0), ha='left', va='top', xycoords='axes fraction', textcoords='offset points', fontsize=font)
 
     fig.tight_layout()
-    fig.savefig(osp.join('fig', output_fp))
+    fig.savefig(output_fp)
     plt.show()

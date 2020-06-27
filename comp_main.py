@@ -17,7 +17,9 @@ import os.path as osp
 :x_annotation: annotation at the end of x_ticks, e.g. 10^3
 """
 
-output_fp = '.'.join([osp.split(sys.argv[0])[-1].split('.')[0], 'pdf'])
+output_fn = '.'.join([osp.split(sys.argv[0])[-1].split('.')[0], 'pdf'])
+output_fp = osp.join('fig', output_fn)
+
 run_list = ['SGD', 'FedLaAvg-ICA', 'FedLaAvg-FCA', 'FedAvg-ICA', 'FedAvg-FCA', 'FedLaAvg-outlier']
 
 x_label = 'Communication Rounds'
@@ -56,7 +58,12 @@ x_tick_interval = 10000
 x_ticks_step = list(range(0, max_it + 1, x_tick_interval))
 x_ticks_text = ['$' + str(num//1000) + '$' for num in x_ticks_step]
 x_ticks = x_ticks_step, x_ticks_text
+
+y_ticks = (range(10, 61, 10),) * 2
+
 x_annotation = "$10^3$"
+
+y_scaling = 100
 
 plot(
     run_list=run_list, output_fp=output_fp,
@@ -67,5 +74,6 @@ plot(
     subfigure_pars=subfigure_pars,
     plot_order=plot_order, legend_order=legend_order, 
     legend_loc=legend_loc, fraemon=fraemon, label_spacing=label_spacing,
-    x_ticks=x_ticks, x_annotation=x_annotation
+    x_ticks=x_ticks, x_annotation=x_annotation, y_ticks=y_ticks,
+    y_scaling=y_scaling
 )
