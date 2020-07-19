@@ -12,7 +12,7 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
     fig_size=(10, 6),
     x_label=None, y_label=None,
     legend_list=None, color_list=None, line_list=None, plot_every_list=None, alpha_list=None, line_width_list=None,
-    max_it=None, font=15,
+    max_it=None, min_it=0, font=15,
     subfigure_pars=None,
     plot_order=None, legend_order=None, 
     legend_loc=None, fraemon=True, label_spacing=0.4,
@@ -113,7 +113,7 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
         proc_steps = []
         proc_values = []
         for step, value in zip(steps, values):
-            if (max_it is None or max_it >= step) and step >= low:
+            if (max_it is None or max_it >= step) and step >= min_it and step >= low:
                 proc_steps.append(step)
                 proc_values.append(value)
                 low += plot_every
@@ -142,7 +142,6 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
         plt.xlabel(x_label, fontdict=font_dict)
     if y_label is not None:
         plt.ylabel(y_label, fontdict=font_dict)
-
 
     plt.xticks(*x_ticks, fontsize=font)
     plt.yticks(*y_ticks, fontsize=font)
@@ -176,8 +175,15 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
             subfigure_line_width = [subfigure_line_width] * num_lines
 
         plt.axes(axin)
-        for steps, values, color, line, width in zip(steps_list, values_list, color_list, line_list, subfigure_line_width):
-            plt.plot(steps, values, line, c=color, linewidth=width)
+        _lines = [None] * len(legend_list)
+        for line_idx in plot_order:
+            steps, values, color, line, alpha, label, line_width  = plot_pars_array[line_idx]
+            pars_dict = {}
+            if color is not None:
+                pars_dict['c'] = color
+            if label is not None:
+                pars_dict['label'] = label
+            _lines[line_idx], = plt.plot(steps, values, line, linewidth=line_width, alpha=alpha, **pars_dict)
         plt.xlim(*xlim)
         plt.ylim(*ylim)
         plt.xticks(*xticks, size=font)

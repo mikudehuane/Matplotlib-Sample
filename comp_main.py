@@ -34,11 +34,12 @@ plot_every_list = [1, 1, 1, 1, 1, 100]
 line_width_list = [1, 1, 1, 1, 1, 1]
 
 max_it = 70000
+min_it = 5000
 
 font = 21
 
 subfigure_pars = dict(
-    axin=[.7, .45, .2, .3],
+    axin=[.7, .35, .2, .3],
     xlim=[69000, 70100],
     xticks=([69000, 70000], [69, 70]),
     ylim=[53, 65],
@@ -47,19 +48,19 @@ subfigure_pars = dict(
     x_annotation='$10^3$'
 )
 
-plot_order = [0, 2, 5, 1, 4, 3]
-legend_order=[0, 2, 1, 4, 3, 5]
+plot_order = [2, 1, 4, 3]
+legend_order=[2, 1, 4, 3]
 
-legend_loc = "lower center"
+legend_loc = ("lower right", (0.65, 0.1))
 fraemon = False
 label_spacing = 0.4
 
 x_tick_interval = 10000
-x_ticks_step = list(range(0, max_it + 1, x_tick_interval))
+x_ticks_step = list(range(min_it, max_it + 1, x_tick_interval))
 x_ticks_text = ['$' + str(num//1000) + '$' for num in x_ticks_step]
 x_ticks = x_ticks_step, x_ticks_text
 
-y_ticks = (range(10, 61, 10),) * 2
+y_ticks = (range(30, 61, 10),) * 2
 
 x_annotation = "$10^3$"
 
@@ -70,7 +71,7 @@ plot(
     x_label=x_label, y_label=y_label,
     legend_list=legend_list, color_list=color_list, line_list=line_list,
     plot_every_list=plot_every_list, alpha_list=alpha_list, line_width_list=line_width_list,
-    max_it=max_it, font=font,
+    max_it=max_it, min_it=min_it, font=font,
     subfigure_pars=subfigure_pars,
     plot_order=plot_order, legend_order=legend_order, 
     legend_loc=legend_loc, fraemon=fraemon, label_spacing=label_spacing,
