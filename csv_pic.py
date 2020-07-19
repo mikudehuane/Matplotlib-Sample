@@ -17,7 +17,7 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
     plot_order=None, legend_order=None, 
     legend_loc=None, fraemon=True, label_spacing=0.4,
     x_ticks=None, x_annotation=None, y_ticks=None,
-    y_scaling=1):
+    y_scaling=1, chinese_font=False):
     """
     :run_list: list of csv file names (discarding '.csv'), or list of data (x, y)
     :output_fp: the output file name
@@ -61,7 +61,7 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
     # set math and ordinary fonts to be consistent
     mpl.rcParams['mathtext.fontset'] = 'stix'
     mpl.rcParams['font.family'] = 'STIXGeneral'
-    
+
     num_lines = len(run_list)
 
     legend_loc_dict = {}
@@ -153,7 +153,14 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
             print(f"legend_order {legend_order} contradicts plot_order {plot_order}, since require legends on lines that are not plotted.")
             raise AssertionError()
         handles[handles_idx] = handle
-    fig.legend(fancybox=True, handles=handles, prop=font_dict, frameon=fraemon, labelspacing=label_spacing, 
+
+    fontcn = mpl.font_manager.FontProperties(fname="song.ttf")
+    fontcn.set_size(font)
+    if chinese_font:
+        legend_font = fontcn
+    else:
+        legend_font = font_dict
+    fig.legend(fancybox=True, handles=handles, prop=legend_font, frameon=fraemon, labelspacing=label_spacing, 
         **legend_loc_dict)
 
     if x_annotation is not None:
@@ -183,7 +190,7 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
                 pars_dict['c'] = color
             if label is not None:
                 pars_dict['label'] = label
-            _lines[line_idx], = plt.plot(steps, values, line, linewidth=line_width, alpha=alpha, **pars_dict)
+            _lines[line_idx], = plt.plot(steps, values, line, linewidth=3*line_width, alpha=alpha, **pars_dict)
         plt.xlim(*xlim)
         plt.ylim(*ylim)
         plt.xticks(*xticks, size=font)
