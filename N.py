@@ -20,38 +20,30 @@ import os.path as osp
 output_fn = '.'.join([osp.split(sys.argv[0])[-1].split('.')[0], 'pdf'])
 output_fp = osp.join('fig', output_fn)
 
-run_list = ['SGD', 'FedLaAvg-ICA', 'FedLaAvg-FCA', 'FedAvg-ICA', 'FedAvg-FCA', 'FedLaAvg-outlier']
+run_list = ['FedLaAvg-N200', 'FedLaAvg-N400', 'FedLaAvg-N600', 'FedLaAvg-N800', 'FedLaAvg-ICA']
 
 x_label = 'Communication Rounds'
 y_label = 'Test Accuracy (%)'
 
-legend_list = ['Sequential SGD', u'联合最新均值', f'{alg} (FCA)',
-    u'联合均值', 'FedAvg (FCA)', 'FedLaAvg (ICA with Outliers)']
-color_list = ['red', 'orange', 'blue', 'green', 'purple', 'black']
-alpha_list = [1, 1, 1, 1, 1, 1]   # transparent degree
-line_list = ['--', '-', '-', '-', ':', '-']
-plot_every_list = [1, 1, 1, 1, 1, 100]
-line_width_list = [1, 1, 1, 1, 1, 1]
+alg = u"联合最新均值"
+legend_list = [f'{alg} ($N=200$)', f'{alg} ($N=400$)', f'{alg} ($N=600$)', f'{alg} ($N=800$)', f'{alg} ($N=1000$)']
+color_list = ['red', '-', 'blue', '-', 'orange']
+alpha_list = [1, 1, 1, 1, 1]   # transparent degree
+line_list = ['-', '-', '-', '-', '-']
+plot_every_list = [1, 1, 1, 1, 1]
+line_width_list = [1, 1, 1, 1, 1]
 
-max_it = 70000
+max_it = 50000
 min_it = 0
 
 font = 21
 
-subfigure_pars = dict(
-    axin=[.68, .45, .2, .3],
-    xlim=[69000, 70100],
-    xticks=([69000, 70000], [69, 70]),
-    ylim=[53, 62],
-    yticks=[54, 57, 60],
-    line_width=3.0,
-    x_annotation='$10^3$'
-)
+subfigure_pars = None
 
-plot_order = [1, 3]
-legend_order=[1, 3]
+plot_order = [4, 2, 0]
+legend_order = [0, 2, 4]
 
-legend_loc = ("lower right", (0.9, 0.15))
+legend_loc = ("lower right", (0.94, 0.15))
 fraemon = False
 label_spacing = 0.4
 

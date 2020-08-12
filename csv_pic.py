@@ -17,7 +17,9 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
     plot_order=None, legend_order=None, 
     legend_loc=None, fraemon=True, label_spacing=0.4,
     x_ticks=None, x_annotation=None, y_ticks=None,
-    y_scaling=1, chinese_font=False):
+    main_graph_y_lim=None,
+    y_scaling=1, chinese_font=False,
+    log_axis=False):
     """
     :run_list: list of csv file names (discarding '.csv'), or list of data (x, y)
     :output_fp: the output file name
@@ -52,7 +54,12 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
     :x_ticks: tuple of steps and text
     :x_annotation: annotation at the end of x_ticks, e.g. 10^3
 
+    :main_graph_y_lim: y axis limitation, (low, high)
+
     :y_scaling: scaling y axis ticks (y_ticks has higher priority)
+
+    :log_axis: log scaling y axis, pass appropriate y_ticks to corporate,
+        processed after y_scaling
     """
 
     # rc('text', usetex=True)
@@ -125,14 +132,19 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
     fig = plt.figure(dpi=128, figsize=fig_size)
 
     plot_pars_array = list(zip(steps_list, values_list, color_list, line_list, alpha_list, legend_list, line_width_list))
+    if main_graph_y_lim is not None:
+        plt.ylim(*main_graph_y_lim)
     for line_idx in plot_order:
         steps, values, color, line, alpha, label, line_width  = plot_pars_array[line_idx]
+        if log_axis:
+            values = np.log(values)
         pars_dict = {}
         if color is not None:
             pars_dict['c'] = color
         if label is not None:
             pars_dict['label'] = label
-        lines[line_idx], = plt.plot(steps, values, line, linewidth=line_width, alpha=alpha, **pars_dict)
+        lines[line_idx], = plt.plot(steps, values, line, linewidth=line_width, alpha=alpha, 
+            **pars_dict)
 
     font_dict = {
         'size'   : font,
