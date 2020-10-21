@@ -3,7 +3,7 @@ import os.path as osp
 from csv_pic import *
 import numpy as np
 
-output_file = '.'.join([osp.split(sys.argv[0])[-1].split('.')[0], 'pdf'])
+output_file = '.'.join((osp.split(sys.argv[0])[-1]).split('.')[:-1] + ['pdf'])
 
 run_list = ['FedLaAvg-N200', 'FedLaAvg-N400', 'FedLaAvg-N600', 'FedLaAvg-N800', 'FedLaAvg-ICA']
 

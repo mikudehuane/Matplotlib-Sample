@@ -17,7 +17,7 @@ import os.path as osp
 :x_annotation: annotation at the end of x_ticks, e.g. 10^3
 """
 
-output_fn = '.'.join([osp.split(sys.argv[0])[-1].split('.')[0], 'pdf'])
+output_fn = '.'.join((osp.split(sys.argv[0])[-1]).split('.')[:-1] + ['pdf'])
 output_fp = osp.join('fig', output_fn)
 
 run_list = ['FedLaAvg-N200', 'FedLaAvg-N400', 'FedLaAvg-N600', 'FedLaAvg-N800', 'FedLaAvg-ICA']
