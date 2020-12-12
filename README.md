@@ -17,3 +17,6 @@ The suggested font is TrueType.
 Many matplotlib APIs are hard to find, e.g. changing the font, using latex, adding annotation, mixing fonts, adding subfigures, etc.
 Since the strict requirements on submissions to conferences in computer science, we actually need these features, but they are not well-documented.
 Therefore, I write a sample to record these APIs to avoid searching for them again when we need them.
+
+# Demo
+![demo.png](fig/N.png)
