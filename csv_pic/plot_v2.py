@@ -29,7 +29,7 @@ def plot(
         input_fps: List[str], output_fp: str = None, *,
         preprocesses: List[Callable[[List, List], Tuple[List, List]]] = None,
         data_format_config: Dict = None,
-        figure_config: Dict = None,
+        figure_config: Union[Dict, str] = None,
         x_label_config: Dict = None, y_label_config: Dict = None,
         legend_config: Dict = None,
         line_configs: List[Dict] = None,
@@ -48,7 +48,8 @@ def plot(
         data_format_config: config for the data format, by default {'x': 0, 'y': 1}
             'x': column number of x axis
             'y': column number of y axis
-        figure_config: config for the figure, by default {'size': (10, 6), 'dpi': 128}
+        figure_config: config for the figure, by default {'size': (10, 6), 'dpi': 128},
+                'inherit' means do not create new figure, useful when plot subfigure
             'size': size of the output figure, given as (width, height)
             'dpi': precision of the output figure
         x_label_config: config for x label, by default None (no label)
@@ -116,7 +117,8 @@ def plot(
             return _ret
 
     data_format_config = _get_config(data_format_config, default_config.DATA_FORMAT_CONFIG)
-    figure_config = _get_config(figure_config, default_config.FIGURE_CONFIG)
+    if figure_config != 'inherit':
+        figure_config = _get_config(figure_config, default_config.FIGURE_CONFIG)
 
     x_label_config = _get_config_reserve_none(x_label_config, default_config.X_LABEL_CONFIG)
     y_label_config = _get_config_reserve_none(y_label_config, default_config.Y_LABEL_CONFIG)
@@ -137,7 +139,8 @@ def plot(
     data_values = [utils.get_data(fp, config=data_format_config, preprocess=proc)
                    for fp, proc in zip(input_fps, preprocesses)]
 
-    fig = plt.figure(dpi=figure_config['dpi'], figsize=figure_config['size'])
+    if figure_config != 'inherit':
+        plt.figure(dpi=figure_config['dpi'], figsize=figure_config['size'])
 
     if legend_config is None:
         legend_texts = [None] * num_lines
