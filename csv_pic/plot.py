@@ -8,18 +8,22 @@ from matplotlib import rc
 from matplotlib import font_manager as fm, rcParams
 
 alg = 'FedLaAvg'
-def plot(run_list, output_fp, x_column=1, y_column=2,
-    fig_size=(10, 6),
-    x_label=None, y_label=None,
-    legend_list=None, color_list=None, line_list=None, plot_every_list=None, alpha_list=None, line_width_list=None,
-    max_it=None, min_it=0, font=15,
-    subfigure_pars=None,
-    plot_order=None, legend_order=None, 
-    legend_loc=None, fraemon=True, label_spacing=0.4,
-    x_ticks=None, x_annotation=None, y_ticks=None,
-    main_graph_y_lim=None,
-    y_scaling=1, chinese_font=False,
-    log_axis=False):
+
+
+def plot(
+        run_list, output_fp, x_column=1, y_column=2,
+        fig_size=(10, 6),
+        x_label=None, y_label=None,
+        legend_list=None, color_list=None, line_list=None, plot_every_list=None, alpha_list=None, line_width_list=None,
+        max_it=None, min_it=0, font=15,
+        subfigure_pars=None,
+        plot_order=None, legend_order=None,
+        legend_loc=None, fraemon=True, label_spacing=0.4,
+        x_ticks=None, x_annotation=None, y_ticks=None,
+        main_graph_y_lim=None,
+        y_scaling=1, chinese_font=False,
+        log_axis=False
+):
     """
     :run_list: list of csv file names (discarding '.csv'), or list of data (x, y)
     :output_fp: the output file name
@@ -94,7 +98,7 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
         plot_order = list(range(num_lines))
     if legend_order is None:
         legend_order = deepcopy(plot_order)
-    
+
     if x_ticks is None:
         x_ticks = ()
     if y_ticks is None:
@@ -108,7 +112,7 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
     filep_list = [osp.join('data', run_name + '.csv') for run_name in run_list]
 
     for filep, plot_every in zip(filep_list, plot_every_list):
-        with open(filep) as f:  
+        with open(filep) as f:
             reader = csv.reader(f)
             next(reader)
             steps = [int(row[x_column]) for row in reader]
@@ -131,11 +135,12 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
 
     fig = plt.figure(dpi=128, figsize=fig_size)
 
-    plot_pars_array = list(zip(steps_list, values_list, color_list, line_list, alpha_list, legend_list, line_width_list))
+    plot_pars_array = list(
+        zip(steps_list, values_list, color_list, line_list, alpha_list, legend_list, line_width_list))
     if main_graph_y_lim is not None:
         plt.ylim(*main_graph_y_lim)
     for line_idx in plot_order:
-        steps, values, color, line, alpha, label, line_width  = plot_pars_array[line_idx]
+        steps, values, color, line, alpha, label, line_width = plot_pars_array[line_idx]
         if log_axis:
             values = np.log(values)
         pars_dict = {}
@@ -143,13 +148,13 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
             pars_dict['c'] = color
         if label is not None:
             pars_dict['label'] = label
-        lines[line_idx], = plt.plot(steps, values, line, linewidth=line_width, alpha=alpha, 
-            **pars_dict)
+        lines[line_idx], = plt.plot(steps, values, line, linewidth=line_width, alpha=alpha,
+                                    **pars_dict)
 
     font_dict = {
-        'size'   : font,
+        'size': font,
     }
-    
+
     if x_label is not None:
         plt.xlabel(x_label, fontdict=font_dict)
     if y_label is not None:
@@ -162,7 +167,8 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
     for handles_idx, legend_idx in enumerate(legend_order):
         handle = lines[legend_idx]
         if handle is None:
-            print(f"legend_order {legend_order} contradicts plot_order {plot_order}, since require legends on lines that are not plotted.")
+            print(
+                f"legend_order {legend_order} contradicts plot_order {plot_order}, since require legends on lines that are not plotted.")
             raise AssertionError()
         handles[handles_idx] = handle
 
@@ -172,11 +178,12 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
         legend_font = fontcn
     else:
         legend_font = font_dict
-    fig.legend(fancybox=True, handles=handles, prop=legend_font, frameon=fraemon, labelspacing=label_spacing, 
-        **legend_loc_dict)
+    fig.legend(fancybox=True, handles=handles, prop=legend_font, frameon=fraemon, labelspacing=label_spacing,
+               **legend_loc_dict)
 
     if x_annotation is not None:
-        plt.annotate(x_annotation, xy=(1,0), ha='left', va='top', xycoords='axes fraction', textcoords='offset points', fontsize=font)
+        plt.annotate(x_annotation, xy=(1, 0), ha='left', va='top', xycoords='axes fraction', textcoords='offset points',
+                     fontsize=font)
 
     if subfigure_pars is not None:
         try:
@@ -196,20 +203,21 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
         plt.axes(axin)
         _lines = [None] * len(legend_list)
         for line_idx in plot_order:
-            steps, values, color, line, alpha, label, line_width  = plot_pars_array[line_idx]
+            steps, values, color, line, alpha, label, line_width = plot_pars_array[line_idx]
             pars_dict = {}
             if color is not None:
                 pars_dict['c'] = color
             if label is not None:
                 pars_dict['label'] = label
-            _lines[line_idx], = plt.plot(steps, values, line, linewidth=3*line_width, alpha=alpha, **pars_dict)
+            _lines[line_idx], = plt.plot(steps, values, line, linewidth=3 * line_width, alpha=alpha, **pars_dict)
         plt.xlim(*xlim)
         plt.ylim(*ylim)
         plt.xticks(*xticks, size=font)
         plt.yticks(yticks, size=font)
 
         if subfigure_x_annotation is not None:
-            plt.annotate(subfigure_x_annotation, xy=(1,0), ha='left', va='top', xycoords='axes fraction', textcoords='offset points', fontsize=font)
+            plt.annotate(subfigure_x_annotation, xy=(1, 0), ha='left', va='top', xycoords='axes fraction',
+                         textcoords='offset points', fontsize=font)
 
     fig.tight_layout()
     fig.savefig(output_fp)

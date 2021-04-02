@@ -19,4 +19,4 @@ Since the strict requirements on submissions to conferences in computer science,
 Therefore, I write a sample to record these APIs to avoid searching for them again when we need them.
 
 # Demo
-![demo.png](fig/N.png)
+![demo.png](figure/N.png)
