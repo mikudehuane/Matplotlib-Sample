@@ -8,7 +8,7 @@
 
 functions defined returns a preprocess function that transform data in the defined way
 """
-
+import bisect
 from typing import Callable
 from typing import List, Tuple
 
@@ -22,19 +22,20 @@ def get_sample_data_at_equal_x_interval(interval) -> FUNCTION_PROTOCOL:
     Args:
         interval: minimum interval between the x coordinates of two dots
     """
-    # TODO(islander): finish function
-    ...
+    def func(x_values, y_values):
+        low = 0
+        new_x_values = []
+        new_y_values = []
+        for x_val, y_val in zip(x_values, y_values):
+            if x_val >= low:
+                new_x_values.append(x_val)
+                new_y_values.append(y_val)
+                low += interval
+            else:
+                continue
+        return new_x_values, new_y_values
 
-
-def get_clamp_x_range(x_min=float('-inf'), x_max=float('inf')) -> FUNCTION_PROTOCOL:
-    """clamp data to reserve only data whose x coordinate is within the range of [x_min, x_max]
-
-    Args:
-        x_min: minimum x value
-        x_max: maximum x value
-    """
-    # TODO(islander): finish function
-    ...
+    return func
 
 
 def get_scale_y(scale) -> FUNCTION_PROTOCOL:
@@ -43,8 +44,11 @@ def get_scale_y(scale) -> FUNCTION_PROTOCOL:
     Args:
         scale: multiply each y element by scale
     """
-    # TODO(islander): finish function
-    ...
+    def func(x_values, y_values):
+        y_values = [val * scale for val in y_values]
+        return x_values, y_values
+
+    return func
 
 
 def get_streamed_preprocess(preprocesses: List[FUNCTION_PROTOCOL]) -> FUNCTION_PROTOCOL:

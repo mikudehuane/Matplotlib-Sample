@@ -19,7 +19,7 @@ def main():
     }
 
     csv_pic.plot2(
-        input_fps,
+        input_fps, output_fp='figure/raw.png',
         data_format_config=data_format_config
     )
     plt.show()

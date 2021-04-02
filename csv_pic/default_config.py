@@ -24,8 +24,9 @@ Y_LABEL_CONFIG = {
 
 LEGEND_CONFIG = {
     'frameon': False,
-    'label_spacing': 0.4,
-    'font_dict': {'size': 15}
+    'labelspacing': 0.4,
+    'font_dict': {'size': 15},
+    'ncol': 1
 }
 
 LINE_CONFIG = {

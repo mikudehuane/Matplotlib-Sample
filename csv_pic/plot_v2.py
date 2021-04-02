@@ -20,7 +20,7 @@ def get_font(font_fn, font_size):
         font_size: size of the required font
     """
     # noinspection PyUnresolvedReferences
-    ret = mpl.font_manager.FontProperties(fname=osp.join('font', font_fn))
+    ret = mpl.font_manager.FontProperties(fname=osp.join(osp.dirname(__file__), 'font', font_fn))
     ret.set_size(font_size)
     return ret
 
@@ -60,11 +60,15 @@ def plot(
         legend_config: config for legend, by default None (no legend)
             'text': list of texts for each legend, same order with input_fps
             'loc': location for legend
-            'frameon': whether legend has frame
             'order': order of the legends on the graph, given as a list of <index in input_fps>
                 None by default, means use the natural order
-            'label_spacing': vertical space between two labels
             'font_dict': font given as a dict
+            **kwargs: directly given as plt.legend keyword args, including
+                'labelspacing': vertical space between two labels
+                'ncol': number of columns for the legend
+                'mode': mode of legend placement, e.g., expand will fill the given bbox
+                'borderaxespad': unknown function
+                'frameon': whether legend has frame
         line_configs: list of configs for each line, same order with input_fps,
             each config with the following format, None means use pyplot default
                 'color': given as 'red', 'blue', etc.

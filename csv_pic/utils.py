@@ -3,29 +3,34 @@
 # @Author  : islander
 # @File    : utils.py
 # @Software: PyCharm
+from copy import deepcopy
 from typing import Dict, List
 import numpy as np
 from matplotlib import pyplot as plt
 
 
 def legend(handlers: List, config: Dict):
+    config = deepcopy(config)
     # legend location
-    legend_loc = config.get('loc', None)
-    legend_loc_dict = {}
+    legend_loc = config.pop('loc', None)
+    legend_kwargs = {}
     if legend_loc is not None:
         legend_loc, legend_bbox = legend_loc
-        legend_loc_dict['bbox_to_anchor'] = legend_bbox
-        legend_loc_dict['loc'] = legend_loc
+        legend_kwargs['bbox_to_anchor'] = legend_bbox
+        legend_kwargs['loc'] = legend_loc
 
     # legend order
-    legend_order = config.get('order', None)
+    legend_order = config.pop('order', None)
     if legend_order is None:
         legend_order = list(range(len(handlers)))
     handlers = [handlers[idx] for idx in legend_order]
 
-    plt.legend(fancybox=True, handles=handlers, prop=config['font_dict'], frameon=config['fraemon'],
-               labelspacing=config['label_spacing'],
-               **legend_loc_dict)
+    prop = config.pop('font_dict')
+
+    config.pop('text', None)  # remove unused key
+
+    plt.legend(fancybox=True, handles=handlers, prop=prop,
+               **legend_kwargs, **config)
 
 
 def tick(loc, config: Dict):
@@ -51,7 +56,7 @@ def plot_line(x_values, y_values, config, label=None):
         config['line'], linewidth=config['width'], alpha=config['alpha'],
         **pars_dict
     )
-    return line
+    return line[0]
 
 
 def get_data(data_fp, config, preprocess=None, skip_heading=True):
