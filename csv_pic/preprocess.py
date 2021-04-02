@@ -9,7 +9,7 @@
 functions defined returns a preprocess function that transform data in the defined way
 """
 
-from collections import Callable
+from typing import Callable
 from typing import List, Tuple
 
 

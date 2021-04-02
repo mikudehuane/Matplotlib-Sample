@@ -145,7 +145,8 @@ def plot(
         config = line_configs[line_idx]
         lines[line_idx] = utils.plot_line(x_values, y_values, config=config, label=legend_texts[line_idx])
 
-    utils.legend(lines, config=legend_config)
+    if legend_config is not None:
+        utils.legend(lines, config=legend_config)
 
     if x_tick_config is not None:
         utils.tick(loc='x', config=x_tick_config)

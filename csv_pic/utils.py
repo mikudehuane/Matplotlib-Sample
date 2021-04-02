@@ -54,10 +54,12 @@ def plot_line(x_values, y_values, config, label=None):
     return line
 
 
-def get_data(data_fp, config, preprocess=None):
+def get_data(data_fp, config, preprocess=None, skip_heading=True):
     x_col = config['x']
     y_col = config['y']
     with open(data_fp) as f:
+        if skip_heading:
+            f.readline()
         content = f.readlines()
     # strip lines and split
     content = [line.strip().split(',') for line in content]
