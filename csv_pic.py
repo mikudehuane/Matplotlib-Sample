@@ -9,17 +9,17 @@ from matplotlib import font_manager as fm, rcParams
 
 alg = 'FedLaAvg'
 def plot(run_list, output_fp, x_column=1, y_column=2,
-    fig_size=(10, 6),
-    x_label=None, y_label=None,
-    legend_list=None, color_list=None, line_list=None, plot_every_list=None, alpha_list=None, line_width_list=None,
-    max_it=None, min_it=0, font=15,
-    subfigure_pars=None,
-    plot_order=None, legend_order=None, 
-    legend_loc=None, fraemon=True, label_spacing=0.4,
-    x_ticks=None, x_annotation=None, y_ticks=None,
-    main_graph_y_lim=None,
-    y_scaling=1, chinese_font=False,
-    log_axis=False):
+        fig_size=(10, 6),
+        x_label=None, y_label=None,
+        legend_list=None, color_list=None, line_list=None, plot_every_list=None, alpha_list=None, line_width_list=None,
+        max_it=None, min_it=0, font=15,
+        subfigure_pars=None,
+        plot_order=None, legend_order=None,
+        legend_loc=None, fraemon=True, label_spacing=0.4,
+        x_ticks=None, x_annotation=None, y_ticks=None,
+        main_graph_y_lim=None,
+        y_scaling=1, chinese_font=False,
+        log_axis=False):
     """
     :run_list: list of csv file names (discarding '.csv'), or list of data (x, y)
     :output_fp: the output file name
@@ -147,7 +147,7 @@ def plot(run_list, output_fp, x_column=1, y_column=2,
             **pars_dict)
 
     font_dict = {
-        'size'   : font,
+        'size': font,
     }
     
     if x_label is not None:
