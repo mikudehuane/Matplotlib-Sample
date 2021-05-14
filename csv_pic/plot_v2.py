@@ -70,6 +70,7 @@ def plot(
                 'mode': mode of legend placement, e.g., expand will fill the given bbox
                 'borderaxespad': unknown function
                 'frameon': whether legend has frame
+                'handletextpad': interval between the legend line and text
         line_configs: list of configs for each line, same order with input_fps,
             each config with the following format, None means use pyplot default
                 'color': given as 'red', 'blue', etc.
