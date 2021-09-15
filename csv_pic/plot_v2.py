@@ -68,7 +68,8 @@ def plot(
                 'labelspacing': vertical space between two labels
                 'ncol': number of columns for the legend
                 'mode': mode of legend placement, e.g., expand will fill the given bbox
-                'borderaxespad': unknown function
+                'borderaxespad': text is be padded over the legend frame, this par controls the padding value,
+                    give it as 0 to remove the pad and save space
                 'frameon': whether legend has frame
                 'handletextpad': interval between the legend line and text
         line_configs: list of configs for each line, same order with input_fps,
